@@ -14,6 +14,12 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
 import java.lang.NumberFormatException
+// Begin Add localizedPrice12 by Nyan
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
+// End Add localizedPrice12 by Nyan
 
 val ProductType.typeString: String
     get() = if (this == ProductType.ENTITLED || this == ProductType.CONSUMABLE) "inapp" else "subs"
@@ -45,6 +51,27 @@ class RNIapAmazonListener(
                     val coinsReward = product.coinsReward
                     item.putString("productId", product.sku)
                     item.putString("price", priceNumber.toString())
+                    // Begin Add localizedPrice12 by Nyan
+                    val localizedPrice12 = if (priceNumber.toDouble().compareTo(0.00) > 0) {
+                        val price12 = priceNumber.toDouble().toBigDecimal().multiply(BigDecimal.valueOf(2))
+                        val currency = try {
+                            Currency.getInstance("VND")
+                        } catch (e: Exception) {
+                            Currency.getInstance("USD")
+                        }
+                        val numberFormat = try {
+                            NumberFormat.getCurrencyInstance(Locale.getDefault())
+                        } catch (e: Exception) {
+                            NumberFormat.getCurrencyInstance()
+                        }
+                        numberFormat.setMaximumFractionDigits(currency.getDefaultFractionDigits())
+                        numberFormat.setCurrency(currency)
+                        numberFormat.format(price12)
+                    } else {
+                        ""
+                    }
+                    item.putString("localizedPrice12", localizedPrice12)
+                    // End Add localizedPrice12 by Nyan
                     item.putString("type", product.productType.typeString)
                     item.putString("localizedPrice", priceString)
                     item.putString("title", product.title)

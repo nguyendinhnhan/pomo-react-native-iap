@@ -81,6 +81,7 @@ export const subscriptionSk2Map = ({
     type: 'subs',
     price: String(price),
     localizedPrice: displayPrice,
+    localizedPrice12: String(price * 2), // Add localizedPrice12 by Nyan, just simple double price without localize - store kit only available on IOS 15.0
     currency: '', // Not available on new API, use localizedPrice instead
     subscriptionPeriodNumberIOS: `${subscription?.subscriptionPeriod?.value}`,
     subscriptionPeriodUnitIOS:

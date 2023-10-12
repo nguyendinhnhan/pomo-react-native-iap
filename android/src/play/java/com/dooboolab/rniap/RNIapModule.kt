@@ -35,6 +35,12 @@ import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEm
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import java.util.ArrayList
+// Begin Add localizedPrice12 by Nyan
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
+// End Add localizedPrice12 by Nyan
 @ReactModule(name = RNIapModule.TAG)
 class RNIapModule(
     private val reactContext: ReactApplicationContext,
@@ -320,7 +326,28 @@ class RNIapModule(
                                     pricingPhaseItem.priceAmountMicros.toString(),
                                 )
                                 pricingPhase.putInt("recurrenceMode", pricingPhaseItem.recurrenceMode)
-
+                                // Begin Add localizedPrice12 by Nyan
+                                val priceAmount = BigDecimal.valueOf(pricingPhaseItem.priceAmountMicros)
+                                val localizedPrice12 = if (priceAmount.compareTo(BigDecimal.valueOf(0)) > 0) {
+                                    val price12 = priceAmount.divide(BigDecimal.valueOf(500000))
+                                    val currency = try {
+                                        Currency.getInstance("VND")
+                                    } catch (e: Exception) {
+                                        Currency.getInstance("USD")
+                                    }
+                                    val numberFormat = try {
+                                        NumberFormat.getCurrencyInstance(Locale.getDefault())
+                                    } catch (e: Exception) {
+                                        NumberFormat.getCurrencyInstance()
+                                    }
+                                    numberFormat.setMaximumFractionDigits(currency.getDefaultFractionDigits())
+                                    numberFormat.setCurrency(currency)
+                                    numberFormat.format(price12)
+                                } else {
+                                    ""
+                                }
+                                pricingPhase.putString("localizedPrice12", localizedPrice12)
+                                // End Add localizedPrice12 by Nyan
                                 pricingPhasesList.pushMap(pricingPhase)
                             }
                             val pricingPhases = Arguments.createMap()

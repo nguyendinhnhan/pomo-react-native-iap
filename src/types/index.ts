@@ -161,6 +161,7 @@ export interface SubscriptionOfferAndroid {
 
 export interface PricingPhaseAndroid {
   formattedPrice: string;
+  localizedPrice12: string; // Add localizedPrice12 by Nyan
   priceCurrencyCode: string;
   /**
    * P1W, P1M, P1Y
@@ -181,6 +182,7 @@ export interface SubscriptionAmazon extends ProductCommon {
 
   productType?: string;
   name?: string;
+  localizedPrice12: string; // Add localizedPrice12 by Nyan
 }
 
 export type SubscriptionIosPeriod = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR' | '';
@@ -200,6 +202,7 @@ export interface SubscriptionIOS extends ProductCommon {
 
   subscriptionPeriodNumberIOS?: string;
   subscriptionPeriodUnitIOS?: SubscriptionIosPeriod;
+  localizedPrice12: string; // Add localizedPrice12 by Nyan
 }
 
 export type Subscription =
